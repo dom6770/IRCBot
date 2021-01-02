@@ -1,4 +1,5 @@
 ﻿using System;
+using Meebey.SmartIrc4net;
 
 namespace IRC
 {
