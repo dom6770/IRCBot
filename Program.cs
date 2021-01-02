@@ -46,11 +46,11 @@ public class IRCBot {
     public static void OnRawMessage(object sender, IrcEventArgs e) {
         switch(e.Data.Message) {
             case "!dogpic":
-                System.Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "]" + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
+                System.Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
                 irc.SendMessage(SendType.Message, e.Data.Channel, DogPic() + " 🐾");
                 break;
             case "!dickpic":
-                System.Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "]" + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
+                System.Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
                 irc.SendMessage(SendType.Message, e.Data.Channel, "https://i.neus.xyz/bO2FjL.jpg");
                 break;
             //case "!catpic":
@@ -58,13 +58,13 @@ public class IRCBot {
             //    System.Console.WriteLine("Received: " + e.Data.RawMessage);
             //    break;
             case "!awoo":
-                System.Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "]" + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
+                System.Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
                 irc.SendMessage(SendType.Message, e.Data.Channel, "Awoo!");
                 break;
         }
 
     }
-    static void Main() {
+    static void Main(string[] args) {
         Thread.CurrentThread.Name = "IRCBot";
 
         // UTF-8 test
@@ -98,17 +98,11 @@ public class IRCBot {
         try {
             // here we logon and register our nickname and auth it with Q
             irc.Login("Otis", "A stupid C# Bot by dom, UwU", 0, "BaseBot");
-            irc.SendMessage(SendType.Message, "Q@CServe.quakenet.org", "auth BaseBot xHWEaJ72Nj");
-
+            irc.SendMessage(SendType.Message, "Q@CServe.quakenet.org", "auth BaseBot " + args[0]);
             // join the channel
             irc.RfcJoin("#rainbow");
             irc.RfcJoin("#dogbase");
             irc.RfcJoin("#ComputerBase");
-            
-            // spawn a new thread to read the stdin of the console, this we use
-            // for reading IRC commands from the keyboard while the IRC connection
-            // stays in its own thread
-            //new Thread(new ThreadStart(ReadCommands)).Start();
 
             // here we tell the IRC API to go into a receive mode, all events
             // will be triggered by _this_ thread (main thread in this case)
@@ -123,11 +117,13 @@ public class IRCBot {
         } catch(ConnectionException) {
             // this exception is handled because Disconnect() can throw a not
             // connected exception
+            Console.ReadKey();
             Exit();
         } catch(Exception e) {
             // this should not happen by just in case we handle it nicely
             System.Console.WriteLine("Error occurred! Message: " + e.Message);
             System.Console.WriteLine("Exception: " + e.StackTrace);
+            Console.ReadKey();
             Exit();
         }
     }
