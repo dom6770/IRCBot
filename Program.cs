@@ -71,7 +71,7 @@ public class IRCBot {
         irc.Encoding = System.Text.Encoding.UTF8;
 
         // wait time between messages, we can set this lower on own irc servers
-        irc.SendDelay = 200;
+        irc.SendDelay = 500;
 
         // we use channel sync, means we can use irc.GetChannel() and so on
         irc.ActiveChannelSyncing = true;
