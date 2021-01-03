@@ -28,6 +28,10 @@ class DogPicFromFile {
         int index = rand.Next(dogpics.Length);
         return dogpics[index];
     }
+    public static void Add(string url) {
+        Console.WriteLine("URL: " + url + " added!");
+        File.AppendAllText(@"E:\DOCUMENTS\dogpics.txt", Environment.NewLine + url);
+    }
 }
 class IRCBot {
     public static IrcClient irc = new IrcClient();
@@ -52,6 +56,9 @@ class IRCBot {
                 case "die":
                     Exit();
                     break;
+                case "add":
+                    if(e.Data.MessageArray.Length > 1) DogPicFromFile.Add(e.Data.MessageArray[1]);
+                    break;
             }
         } else {
             irc.SendMessage(SendType.Message, e.Data.Nick, "Bark! You are not my owner.");
@@ -68,6 +75,9 @@ class IRCBot {
             case "!dogpics":
                 System.Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
                 irc.SendMessage(SendType.Message, e.Data.Channel, DogPicFromFile.Get() + " 🐾");
+                break;
+            case "!add":
+                if(e.Data.MessageArray.Length > 1) DogPicFromFile.Add(e.Data.MessageArray[1]);
                 break;
             case "!randomdog":
             case "!random.dog":
@@ -132,12 +142,11 @@ class IRCBot {
         // now we are connected to the irc server, let's login, and join channels, and do bot stuff
         try {
             // here we logon and register our nickname and auth it with Q
-            irc.Login("Otis", "A stupid C# Bot by dom, UwU", 0, "BaseBot");
+            irc.Login("Ollie", "A stupid C# Bot by dom, UwU", 0, "BaseBot");
             irc.SendMessage(SendType.Message, "Q@CServe.quakenet.org", "auth BaseBot " + args[0]);
             // join the channel
             irc.RfcJoin("#rainbow");
-            //irc.RfcJoin("#dogbase");
-            //irc.RfcJoin("#ComputerBase");
+            irc.RfcJoin("#ComputerBase");
 
             // here we tell the IRC API to go into a receive mode, all events
             // will be triggered by _this_ thread (main thread in this case)
