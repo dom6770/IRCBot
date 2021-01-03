@@ -12,12 +12,20 @@ class RandomDog {
     public static string Get() {
         RandomDog randomdog = new RandomDog {
             fileSizeBytes = 0,
-            url = "https://i.neus.xyz"
+            url = "Error"
         };
         using(WebClient wc = new WebClient()) {
             var json = wc.DownloadString("https://random.dog/woof.json");
             JsonConvert.PopulateObject(json, randomdog);
         }
+        //var client = _httpClientFactory.CreateClient();
+        //client.BaseAddress = new Uri("https://random.dog/");
+        //RandomDog result = await client.GetFromJsonAsync("/woof.json");
+        //return result.url;
+
+        // * der tage nimmt man httpclient, nicht webclient
+        // *httpclient hat dann GetFromJsonAsync: smile:
+
         return randomdog.url;
     }
 }
