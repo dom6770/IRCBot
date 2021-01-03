@@ -10,12 +10,8 @@ using Newtonsoft.Json;
 public class RandomDog {
     public int fileSizeBytes { get; set; }
     public string url { get; set; }
-}
 
-public class IRCBot {
-    public static IrcClient irc = new IrcClient();
-
-    public static string RandomDogPic() {
+    public static string Get() {
         RandomDog randomdog = new RandomDog {
             fileSizeBytes = 0,
             url = "https://i.neus.xyz"
@@ -24,10 +20,17 @@ public class IRCBot {
         using(WebClient wc = new WebClient()) {
             var json = wc.DownloadString("https://random.dog/woof.json");
             JsonConvert.PopulateObject(json, randomdog);
-        }      
+        }
 
         return randomdog.url;
     }
+
+}
+
+public class IRCBot {
+    public static IrcClient irc = new IrcClient();
+
+
     public static string DogPic() {
         string[] dogpics = File.ReadAllLines(@"dogpics.txt");
 
@@ -75,7 +78,7 @@ public class IRCBot {
                 break;
             case "!randomdog":
                 System.Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
-                irc.SendMessage(SendType.Message, e.Data.Channel, RandomDogPic() + " 🐾");
+                irc.SendMessage(SendType.Message, e.Data.Channel, RandomDog.Get() + " 🐾");
                 break;
             case "!dickpic":
                 System.Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
