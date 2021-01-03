@@ -79,6 +79,7 @@ class IRCBot {
             case "!add":
                 if(e.Data.MessageArray.Length > 1) DogPicFromFile.Add(e.Data.MessageArray[1]);
                 break;
+            case "!drecksvieh":
             case "!randomdog":
             case "!random.dog":
                 System.Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
