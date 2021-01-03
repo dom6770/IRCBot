@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.IO;
 using System.Net;
 using System.Threading;
@@ -7,38 +6,32 @@ using System.Threading;
 using Meebey.SmartIrc4net;
 using Newtonsoft.Json;
 
-public class RandomDog {
+class RandomDog {
     public int fileSizeBytes { get; set; }
     public string url { get; set; }
-
     public static string Get() {
         RandomDog randomdog = new RandomDog {
             fileSizeBytes = 0,
             url = "https://i.neus.xyz"
         };
-
         using(WebClient wc = new WebClient()) {
             var json = wc.DownloadString("https://random.dog/woof.json");
             JsonConvert.PopulateObject(json, randomdog);
         }
-
         return randomdog.url;
     }
-
 }
-
-public class IRCBot {
-    public static IrcClient irc = new IrcClient();
-
-
-    public static string DogPic() {
-        string[] dogpics = File.ReadAllLines(@"dogpics.txt");
-
+class DogPicFromFile {
+    public static string Get() {
+        string[] dogpics = File.ReadAllLines(@"E:\DOCUMENTS\dogpics.txt");
         Random rand = new Random();
         int index = rand.Next(dogpics.Length);
-
         return dogpics[index];
     }
+}
+class IRCBot {
+    public static IrcClient irc = new IrcClient();
+
     public static void OnQueryMessage(object sender, IrcEventArgs e) {
         if(e.Data.From == "dom!~dom@069-073.static.dsl.fonira.net") {
             System.Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] Query: " + e.Data.Nick + " | " + e.Data.Message);
@@ -68,15 +61,16 @@ public class IRCBot {
         System.Console.WriteLine("Error: " + e.ErrorMessage);
         Exit();
     }
-    public static void OnRawMessage(object sender, IrcEventArgs e) {
-        switch(e.Data.Message) {
+    public static void OnMessage(object sender, IrcEventArgs e) {
+        switch(e.Data.MessageArray[0].ToLower()) {
             case "!dog":
             case "!dogpic":
             case "!dogpics":
                 System.Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
-                irc.SendMessage(SendType.Message, e.Data.Channel, DogPic() + " 🐾");
+                irc.SendMessage(SendType.Message, e.Data.Channel, DogPicFromFile.Get() + " 🐾");
                 break;
             case "!randomdog":
+            case "!random.dog":
                 System.Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
                 irc.SendMessage(SendType.Message, e.Data.Channel, RandomDog.Get() + " 🐾");
                 break;
@@ -92,6 +86,16 @@ public class IRCBot {
                 System.Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
                 irc.SendMessage(SendType.Message, e.Data.Channel, "Awoo!");
                 break;
+            case "!oida":
+                if(e.Data.MessageArray.Length > 1) {
+                    Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
+                    irc.SendMessage(SendType.Message, e.Data.Channel, "Oida " + e.Data.MessageArray[1] + "!");
+                    break;
+                } else {
+                    Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
+                    irc.SendMessage(SendType.Message, e.Data.Channel, "Oida!");
+                    break;
+                }
         }
 
     }
@@ -111,7 +115,7 @@ public class IRCBot {
         // here we connect the events of the API to our written methods
         // most have own event handler types, because they ship different data
         irc.OnError += new Meebey.SmartIrc4net.ErrorEventHandler(OnError);
-        irc.OnRawMessage += new IrcEventHandler(OnRawMessage);
+        irc.OnChannelMessage += new IrcEventHandler(OnMessage);
         irc.OnQueryMessage += new IrcEventHandler(OnQueryMessage);
 
         string[] serverlist = new string[] { "irc.quakenet.org" }; // the server we want to connect to, could be also a simple string
@@ -132,7 +136,7 @@ public class IRCBot {
             irc.SendMessage(SendType.Message, "Q@CServe.quakenet.org", "auth BaseBot " + args[0]);
             // join the channel
             irc.RfcJoin("#rainbow");
-            irc.RfcJoin("#dogbase");
+            //irc.RfcJoin("#dogbase");
             //irc.RfcJoin("#ComputerBase");
 
             // here we tell the IRC API to go into a receive mode, all events
