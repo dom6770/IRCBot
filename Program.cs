@@ -1,10 +1,33 @@
-﻿using Meebey.SmartIrc4net;
+﻿
 using System;
 using System.IO;
+using System.Net;
 using System.Threading;
+
+using Meebey.SmartIrc4net;
+using Newtonsoft.Json;
+
+public class RandomDog {
+    public int fileSizeBytes { get; set; }
+    public string url { get; set; }
+}
 
 public class IRCBot {
     public static IrcClient irc = new IrcClient();
+
+    public static string RandomDogPic() {
+        RandomDog randomdog = new RandomDog {
+            fileSizeBytes = 0,
+            url = "https://i.neus.xyz"
+        };
+
+        using(WebClient wc = new WebClient()) {
+            var json = wc.DownloadString("https://random.dog/woof.json");
+            JsonConvert.PopulateObject(json, randomdog);
+        }      
+
+        return randomdog.url;
+    }
     public static string DogPic() {
         string[] dogpics = File.ReadAllLines(@"dogpics.txt");
 
@@ -26,6 +49,7 @@ public class IRCBot {
                 case "join":
                     irc.RfcJoin(e.Data.MessageArray[1]);
                     break;
+                case "leave":
                 case "part":
                     irc.RfcPart(e.Data.MessageArray[1]);
                     break;
@@ -43,9 +67,15 @@ public class IRCBot {
     }
     public static void OnRawMessage(object sender, IrcEventArgs e) {
         switch(e.Data.Message) {
+            case "!dog":
             case "!dogpic":
+            case "!dogpics":
                 System.Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
                 irc.SendMessage(SendType.Message, e.Data.Channel, DogPic() + " 🐾");
+                break;
+            case "!randomdog":
+                System.Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
+                irc.SendMessage(SendType.Message, e.Data.Channel, RandomDogPic() + " 🐾");
                 break;
             case "!dickpic":
                 System.Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
@@ -74,14 +104,14 @@ public class IRCBot {
         // we use channel sync, means we can use irc.GetChannel() and so on
         irc.ActiveChannelSyncing = true;
 
+
         // here we connect the events of the API to our written methods
         // most have own event handler types, because they ship different data
         irc.OnError += new Meebey.SmartIrc4net.ErrorEventHandler(OnError);
         irc.OnRawMessage += new IrcEventHandler(OnRawMessage);
         irc.OnQueryMessage += new IrcEventHandler(OnQueryMessage);
 
-        string[] serverlist;
-        serverlist = new string[] { "irc.quakenet.org" }; // the server we want to connect to, could be also a simple string
+        string[] serverlist = new string[] { "irc.quakenet.org" }; // the server we want to connect to, could be also a simple string
         int port = 6667;
 
         // here we try to connect to the server, if it fails we handle the exception and exit the program
@@ -100,7 +130,7 @@ public class IRCBot {
             // join the channel
             irc.RfcJoin("#rainbow");
             irc.RfcJoin("#dogbase");
-            irc.RfcJoin("#ComputerBase");
+            //irc.RfcJoin("#ComputerBase");
 
             // here we tell the IRC API to go into a receive mode, all events
             // will be triggered by _this_ thread (main thread in this case)
@@ -115,13 +145,11 @@ public class IRCBot {
         } catch(ConnectionException) {
             // this exception is handled because Disconnect() can throw a not
             // connected exception
-            Console.ReadKey();
             Exit();
         } catch(Exception e) {
             // this should not happen by just in case we handle it nicely
             System.Console.WriteLine("Error occurred! Message: " + e.Message);
             System.Console.WriteLine("Exception: " + e.StackTrace);
-            Console.ReadKey();
             Exit();
         }
     }
