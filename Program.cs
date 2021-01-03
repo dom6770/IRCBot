@@ -108,6 +108,7 @@ class IRCBot {
 
             // RANDOM CAT
             case "!randomcat":
+            case "!random.cat":
                 Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
                 irc.SendMessage(SendType.Message, e.Data.Channel, RandomCat.Get() + " 🐾");
                 break;
