@@ -6,30 +6,7 @@ using System.Threading;
 using Meebey.SmartIrc4net;
 using Newtonsoft.Json;
 
-class RandomDog {
-    public int fileSizeBytes { get; set; }
-    public string url { get; set; }
-    public static string Get() {
-        RandomDog randomdog = new RandomDog {
-            fileSizeBytes = 0,
-            url = "Error"
-        };
-        using(WebClient wc = new WebClient()) {
-            var json = wc.DownloadString("https://random.dog/woof.json");
-            JsonConvert.PopulateObject(json, randomdog);
-        }
-        //var client = _httpClientFactory.CreateClient();
-        //client.BaseAddress = new Uri("https://random.dog/");
-        //RandomDog result = await client.GetFromJsonAsync("/woof.json");
-        //return result.url;
-
-        // * der tage nimmt man httpclient, nicht webclient
-        // *httpclient hat dann GetFromJsonAsync: smile:
-
-        return randomdog.url;
-    }
-}
-class DogPicFromFile {
+class RandomDogFromFile {
     public static string Get() {
         string[] dogpics = File.ReadAllLines(@"E:\DOCUMENTS\dogpics.txt");
         Random rand = new Random();
@@ -39,6 +16,37 @@ class DogPicFromFile {
     public static void Add(string url) {
         Console.WriteLine("URL: " + url + " added!");
         File.AppendAllText(@"E:\DOCUMENTS\dogpics.txt", Environment.NewLine + url);
+    }
+}
+class RandomDog {
+    public int fileSizeBytes { get; set; }
+    public string url { get; set; }
+    public static string Get() {
+        RandomDog picture = new RandomDog {};
+        using(WebClient client = new WebClient()) {
+            var json = client.DownloadString("https://random.dog/woof.json");
+            JsonConvert.PopulateObject(json, picture);
+        }
+        //var client = _httpClientFactory.CreateClient();
+        //client.BaseAddress = new Uri("https://random.dog/");
+        //RandomDog result = await client.GetFromJsonAsync("/woof.json");
+        //return result.url;
+
+        // * der tage nimmt man httpclient, nicht webclient
+        // *httpclient hat dann GetFromJsonAsync: smile:
+
+        return picture.url;
+    }
+}
+class RandomCat {
+    public string file { get; set; }
+    public static string Get() {
+        RandomCat picture = new RandomCat {};
+        using(WebClient client = new WebClient()) {
+            string json = client.DownloadString("http://aws.random.cat/meow");
+            JsonConvert.PopulateObject(json, picture);
+        }
+        return picture.file;
     }
 }
 class IRCBot {
@@ -65,7 +73,7 @@ class IRCBot {
                     Exit();
                     break;
                 case "add":
-                    if(e.Data.MessageArray.Length > 1) DogPicFromFile.Add(e.Data.MessageArray[1]);
+                    if(e.Data.MessageArray.Length > 1) RandomDogFromFile.Add(e.Data.MessageArray[1]);
                     break;
             }
         } else {
@@ -78,32 +86,46 @@ class IRCBot {
     }
     public static void OnMessage(object sender, IrcEventArgs e) {
         switch(e.Data.MessageArray[0].ToLower()) {
+
+            // RANDOM DOG SELFHOSTED
             case "!dog":
             case "!dogpic":
             case "!dogpics":
                 System.Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
-                irc.SendMessage(SendType.Message, e.Data.Channel, DogPicFromFile.Get() + " 🐾");
+                irc.SendMessage(SendType.Message, e.Data.Channel, RandomDogFromFile.Get() + " 🐾");
                 break;
             case "!add":
-                if(e.Data.MessageArray.Length > 1) DogPicFromFile.Add(e.Data.MessageArray[1]);
+                if(e.Data.MessageArray.Length > 1) RandomDogFromFile.Add(e.Data.MessageArray[1]);
                 break;
+
+            // RANDOM DOG
             case "!drecksvieh":
             case "!randomdog":
             case "!random.dog":
                 System.Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
                 irc.SendMessage(SendType.Message, e.Data.Channel, RandomDog.Get() + " 🐾");
                 break;
+
+            // RANDOM CAT
+            case "!randomcat":
+                Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
+                irc.SendMessage(SendType.Message, e.Data.Channel, RandomCat.Get() + " 🐾");
+                break;
+
+            // DICK PIC
             case "!dickpic":
                 System.Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
                 irc.SendMessage(SendType.Message, e.Data.Channel, "https://i.neus.xyz/bO2FjL.jpg");
                 break;
-            //case "!catpic":
-            //    irc.SendMessage(SendType.Action, e.Data.Channel, "bark!");
-            //    System.Console.WriteLine("Received: " + e.Data.RawMessage);
-            //    break;
+
+            // REACTION COMMANDS
             case "!awoo":
-                System.Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
+                Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
                 irc.SendMessage(SendType.Message, e.Data.Channel, "Awoo!");
+                break;
+            case "!meow":
+                Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
+                irc.SendMessage(SendType.Message, e.Data.Channel, "meow!");
                 break;
             case "!oida":
                 if(e.Data.MessageArray.Length > 1) {
@@ -151,6 +173,7 @@ class IRCBot {
         // now we are connected to the irc server, let's login, and join channels, and do bot stuff
         try {
             // here we logon and register our nickname and auth it with Q
+            //irc.Login("Otis", "A stupid C# Bot by dom, UwU");
             irc.Login("Ollie", "A stupid C# Bot by dom, UwU", 0, "BaseBot");
             irc.SendMessage(SendType.Message, "Q@CServe.quakenet.org", "auth BaseBot " + args[0]);
             // join the channel
