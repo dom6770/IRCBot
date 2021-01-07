@@ -91,13 +91,9 @@ class IRCBot {
             case "!list":
                 System.Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
                 irc.SendMessage(SendType.Message, e.Data.Channel, "!dog !dogpic !dogpics");
-                irc.SendMessage(SendType.Message, e.Data.Channel, "!add");
                 irc.SendMessage(SendType.Message, e.Data.Channel, "!randomdog !random.dog");
                 irc.SendMessage(SendType.Message, e.Data.Channel, "!randomcat !random.cat");
-                irc.SendMessage(SendType.Message, e.Data.Channel, "!dickpic (SFW)");
-                irc.SendMessage(SendType.Message, e.Data.Channel, "!awoo");
-                irc.SendMessage(SendType.Message, e.Data.Channel, "!woof");
-                irc.SendMessage(SendType.Message, e.Data.Channel, "!meow");
+                irc.SendMessage(SendType.Message, e.Data.Channel, "!awoo !woof !meow");
                 irc.SendMessage(SendType.Message, e.Data.Channel, "!oida");
                 break;
 
