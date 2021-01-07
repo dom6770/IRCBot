@@ -87,6 +87,20 @@ class IRCBot {
     public static void OnMessage(object sender, IrcEventArgs e) {
         switch(e.Data.MessageArray[0].ToLower()) {
 
+            // LIST
+            case "!list":
+                System.Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
+                irc.SendMessage(SendType.Message, e.Data.Channel, "!dog !dogpic !dogpics");
+                irc.SendMessage(SendType.Message, e.Data.Channel, "!add");
+                irc.SendMessage(SendType.Message, e.Data.Channel, "!randomdog !random.dog");
+                irc.SendMessage(SendType.Message, e.Data.Channel, "!randomcat !random.cat");
+                irc.SendMessage(SendType.Message, e.Data.Channel, "!dickpic (SFW)");
+                irc.SendMessage(SendType.Message, e.Data.Channel, "!awoo");
+                irc.SendMessage(SendType.Message, e.Data.Channel, "!woof");
+                irc.SendMessage(SendType.Message, e.Data.Channel, "!meow");
+                irc.SendMessage(SendType.Message, e.Data.Channel, "!oida");
+                break;
+
             // RANDOM DOG SELFHOSTED
             case "!dog":
             case "!dogpic":
@@ -123,6 +137,10 @@ class IRCBot {
             case "!awoo":
                 Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
                 irc.SendMessage(SendType.Message, e.Data.Channel, "Awoo!");
+                break;
+            case "!woof":
+                Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
+                irc.SendMessage(SendType.Message, e.Data.Channel, "Woof!");
                 break;
             case "!meow":
                 Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
@@ -175,7 +193,8 @@ class IRCBot {
         try {
             // here we logon and register our nickname and auth it with Q
             //irc.Login("Otis", "A stupid C# Bot by dom, UwU");
-            irc.Login("Ollie", "A stupid C# Bot by dom, UwU", 0, "BaseBot");
+            irc.Login("Ollie", "A stupid C# Bot by dom" +
+                "", 0, "BaseBot");
             irc.SendMessage(SendType.Message, "Q@CServe.quakenet.org", "auth BaseBot " + args[0]);
             // join the channel
             irc.RfcJoin("#rainbow");
