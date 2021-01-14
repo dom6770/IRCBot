@@ -33,7 +33,7 @@ class RandomDog {
         //return result.url;
 
         // * der tage nimmt man httpclient, nicht webclient
-        // *httpclient hat dann GetFromJsonAsync: smile:
+        // * httpclient hat dann GetFromJsonAsync: smile:
 
         return picture.url;
     }
@@ -121,12 +121,6 @@ class IRCBot {
             case "!random.cat":
                 Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
                 irc.SendMessage(SendType.Message, e.Data.Channel, RandomCat.Get() + " 🐾");
-                break;
-
-            // DICK PIC
-            case "!dickpic":
-                System.Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
-                irc.SendMessage(SendType.Message, e.Data.Channel, "https://i.neus.xyz/bO2FjL.jpg");
                 break;
 
             // REACTION COMMANDS
