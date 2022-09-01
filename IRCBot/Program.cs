@@ -8,14 +8,14 @@ using Newtonsoft.Json;
 
 class RandomDogFromFile {
     public static string Get() {
-        string[] dogpics = File.ReadAllLines(@"E:\DOCUMENTS\dogpics.txt");
+        string[] dogpics = File.ReadAllLines(@"E:\TOOLS\IRCBot\dogpics.txt");
         Random rand = new Random();
         int index = rand.Next(dogpics.Length);
         return dogpics[index];
     }
     public static void Add(string url) {
         Console.WriteLine("URL: " + url + " added!");
-        File.AppendAllText(@"E:\DOCUMENTS\dogpics.txt", Environment.NewLine + url);
+        File.AppendAllText(@"E:\TOOLS\IRCBot\dogpics.txt", Environment.NewLine + url);
     }
 }
 class RandomDog {
@@ -91,7 +91,7 @@ class IRCBot {
             case "!list":
                 System.Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
                 irc.SendMessage(SendType.Message, e.Data.Channel, "!dog !dogpic !dogpics");
-                irc.SendMessage(SendType.Message, e.Data.Channel, "!randomdog !random.dog");
+                irc.SendMessage(SendType.Message, e.Data.Channel, "!randomdog !raaaaandom.dog");
                 irc.SendMessage(SendType.Message, e.Data.Channel, "!randomcat !random.cat");
                 irc.SendMessage(SendType.Message, e.Data.Channel, "!awoo !woof !meow");
                 irc.SendMessage(SendType.Message, e.Data.Channel, "!oida");
