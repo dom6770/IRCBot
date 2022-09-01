@@ -6,6 +6,11 @@ using System.Threading;
 using Meebey.SmartIrc4net;
 using Newtonsoft.Json;
 
+class Program {
+
+}
+
+
 class RandomDogFromFile {
     public static string Get() {
         string[] dogpics = File.ReadAllLines(@"E:\TOOLS\IRCBot\dogpics.txt");
@@ -183,12 +188,12 @@ class IRCBot {
         try {
             // here we logon and register our nickname and auth it with Q
             //irc.Login("Otis", "A stupid C# Bot by dom, UwU");
-            irc.Login("Ollie", "A stupid C# Bot by dom" +
+            irc.Login("Otis", "A stupid C# Bot by dom" +
                 "", 0, "BaseBot");
             irc.SendMessage(SendType.Message, "Q@CServe.quakenet.org", "auth BaseBot " + args[0]);
             // join the channel
             irc.RfcJoin("#rainbow");
-            irc.RfcJoin("#ComputerBase");
+            //irc.RfcJoin("#ComputerBase");
 
             // here we tell the IRC API to go into a receive mode, all events
             // will be triggered by _this_ thread (main thread in this case)
