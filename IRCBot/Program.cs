@@ -54,7 +54,7 @@ class IRCBot {
 
     public static void OnQueryMessage(object sender, IrcEventArgs e) {
         if(e.Data.From == "dom!~dom@069-073.static.dsl.fonira.net") {
-            System.Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] Query: " + e.Data.Nick + " | " + e.Data.Message);
+            Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] Query: " + e.Data.Nick + " | " + e.Data.Message);
             switch(e.Data.MessageArray[0]) {
                 case "host":
                     irc.SendMessage(SendType.Message, e.Data.Nick, "e.Data.From: " + e.Data.From);
@@ -81,7 +81,7 @@ class IRCBot {
         }
     }
     public static void OnError(object sender, Meebey.SmartIrc4net.ErrorEventArgs e) {
-        System.Console.WriteLine("Error: " + e.ErrorMessage);
+        Console.WriteLine("Error: " + e.ErrorMessage);
         Exit();
     }
     public static void OnMessage(object sender, IrcEventArgs e) {
@@ -89,7 +89,7 @@ class IRCBot {
 
             // LIST
             case "!list":
-                System.Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
+            Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
                 irc.SendMessage(SendType.Message, e.Data.Channel, "!dog !dogpic !dogpics");
                 irc.SendMessage(SendType.Message, e.Data.Channel, "!randomdog !raaaaandom.dog");
                 irc.SendMessage(SendType.Message, e.Data.Channel, "!randomcat !random.cat");
@@ -101,7 +101,7 @@ class IRCBot {
             case "!dog":
             case "!dogpic":
             case "!dogpics":
-                System.Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
+            Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
                 irc.SendMessage(SendType.Message, e.Data.Channel, RandomDogFromFile.Get() + " 🐾");
                 break;
             case "!add":
@@ -112,7 +112,7 @@ class IRCBot {
             case "!drecksvieh":
             case "!randomdog":
             case "!random.dog":
-                System.Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
+            Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
                 irc.SendMessage(SendType.Message, e.Data.Channel, RandomDog.Get() + " 🐾");
                 break;
 
@@ -175,7 +175,7 @@ class IRCBot {
         try {
             irc.Connect(serverlist, port);
         } catch(ConnectionException e) {
-            System.Console.WriteLine("couldn't connect! Reason: " + e.Message);
+            Console.WriteLine("couldn't connect! Reason: " + e.Message);
             Exit();
         }
 
@@ -206,13 +206,13 @@ class IRCBot {
             Exit();
         } catch(Exception e) {
             // this should not happen by just in case we handle it nicely
-            System.Console.WriteLine("Error occurred! Message: " + e.Message);
-            System.Console.WriteLine("Exception: " + e.StackTrace);
+            Console.WriteLine("Error occurred! Message: " + e.Message);
+            Console.WriteLine("Exception: " + e.StackTrace);
             Exit();
         }
     }
     public static void Exit() {
-        System.Console.WriteLine("Exiting...");
-        System.Environment.Exit(0);
+        Console.WriteLine("Exiting...");
+        Environment.Exit(0);
     }
 }
