@@ -5,7 +5,7 @@ using System.Linq;
 namespace IRCBotApp {
     class EventHandler:IRCBot {
         public static void OnError(object sender,Meebey.SmartIrc4net.ErrorEventArgs e) {
-            Console.WriteLine("Error: " + e.ErrorMessage);
+            Console.WriteLine($"Error: {e.ErrorMessage}");
             irc.SendMessage(SendType.Message,"dom",e.ErrorMessage);
             Exit();
         }
@@ -16,12 +16,11 @@ namespace IRCBotApp {
 
             string[] dogCommands = { "!dog","!dogpic","!dogpics","!drecksvieh","!randomdog","!random.dog" };
             string[] catCommands = { "!cat","!catpic","!catpics","!drecksvieh","!randomcat","!random.cat" };
-            string[] reactionCommands = { "awoo","woof","meow" };
-
-            string[] allCommands = dogCommands.Concat(catCommands).Concat(reactionCommands).ToArray();
+            string[] reactionCommands = { "!awoo","!woof","!meow" };
+            string[] allCommands = dogCommands.Concat(catCommands).Concat(reactionCommands).Append("!oida").ToArray();
 
             if(allCommands.Contains(input))
-                Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
+                Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}] {e.Data.Channel} - {e.Data.Nick} | {e.Data.Message}");
 
             if(dogCommands.Contains(input))
                 irc.SendMessage(SendType.Message,e.Data.Channel,await RandomDog.Get() + " 🐾");
@@ -29,14 +28,14 @@ namespace IRCBotApp {
             if(catCommands.Contains(input))               
                 irc.SendMessage(SendType.Message,e.Data.Channel,RandomCat.Get() + " 🐾");
 
-            if(reactionCommands.Contains("!" + input))
-                irc.SendMessage(SendType.Message,e.Data.Channel,input);
+            if(reactionCommands.Contains(input))
+                irc.SendMessage(SendType.Message,e.Data.Channel,input.Substring(1));
 
             if(input.Contains("!oida")) {
                 if(e.Data.MessageArray.Length > 1)
-                    irc.SendMessage(SendType.Message,e.Data.Channel,"Oida " + e.Data.MessageArray[1] + "!");
+                    irc.SendMessage(SendType.Message,e.Data.Channel,"oida " + e.Data.MessageArray[1] + "!");
                 else
-                    irc.SendMessage(SendType.Message,e.Data.Channel,"Oida!");
+                    irc.SendMessage(SendType.Message,e.Data.Channel,"heast, oida mi ned!");
             }
         }
 
