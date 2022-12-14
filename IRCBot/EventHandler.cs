@@ -11,8 +11,8 @@ namespace IRCBotApp {
             Exit();
         }
 
-        public static void OnRawMessage(object sender,IrcEventArgs e) {
-            string input = e.Data.MessageArray[0].ToLower();
+        public static void OnRawMessage(object sender,Meebey.SmartIrc4net.IrcEventArgs e) {
+            string input = e.Data.RawMessage;
 
             if(input.Contains("stockholm.se.quakenet.org") || input.Contains("Q!TheQBot@CServe.quakenet.org"))
                 Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}] {e.Data.RawMessage}");

@@ -8,7 +8,7 @@ namespace IRCBotApp {
     class IRCBot {
         public static IrcClient irc = new();
 
-        public void Run(string[] args) {
+        public void Run() {
             Thread.CurrentThread.Name = "IRCBot";
 
             // UTF-8 enconding
@@ -25,16 +25,11 @@ namespace IRCBotApp {
             irc.OnQueryMessage += new IrcEventHandler(EventHandler.OnQueryMessage);
             irc.OnRawMessage += new IrcEventHandler(EventHandler.OnRawMessage);
 
-
-            string nick = "fluffy";
-            string username = "BaseBot";
-
-            string[] serverlist = { "irc.quakenet.org" }; // the server we want to connect to, could be also a simple string
-            int port = 6667;
+            var config = new JsonFileReader().Read<Configuration>(@".\configuration.json");
 
             // here we try to connect to the server, if it fails we handle the exception and exit the program
             try {
-                irc.Connect(serverlist,port);
+                irc.Connect(config.ServerList,config.Port);
             }
             catch(ConnectionException e) {
                 Console.WriteLine("couldn't connect! Reason: " + e.Message);
@@ -44,13 +39,12 @@ namespace IRCBotApp {
             // now we are connected to the irc server, let's login, and join channels, and do bot stuff
             try {
                 // here we logon and register our nickname and auth it with Q
-                irc.Login(nick,"A stupid C# Bot by dom",0,username);
+                irc.Login(config.Nick,config.Realname,0,config.Username);
                 // to auth with Q we need to send a direct message to it. 
-                irc.SendMessage(SendType.Message,"Q@CServe.quakenet.org",$"auth BaseBot {args[0]}");
+                irc.SendMessage(SendType.Message,"Q@CServe.quakenet.org",$"auth {config.Username} {config.Password}");
 
                 // join the channel
-                irc.RfcJoin("#rainbow");
-                irc.RfcJoin("#ComputerBase");
+                irc.RfcJoin(config.ChannelList);
 
                 // here we tell the IRC API to go into a receive mode, all events
                 // will be triggered by _this_ thread (main thread in this case)
