@@ -1,4 +1,5 @@
-﻿using Meebey.SmartIrc4net;
+﻿using IRCBot;
+using Meebey.SmartIrc4net;
 using System;
 using System.Linq;
 
@@ -23,10 +24,10 @@ namespace IRCBotApp {
                 Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}] {e.Data.Channel} - {e.Data.Nick} | {e.Data.Message}");
 
             if(dogCommands.Contains(input))
-                irc.SendMessage(SendType.Message,e.Data.Channel,await RandomDog.Get() + " 🐾");
+                irc.SendMessage(SendType.Message,e.Data.Channel,await ApiRequest.RandomDog.Get() + " 🐾"); ;
 
-            if(catCommands.Contains(input))               
-                irc.SendMessage(SendType.Message,e.Data.Channel,RandomCat.Get() + " 🐾");
+            if(catCommands.Contains(input))
+                irc.SendMessage(SendType.Message,e.Data.Channel,await ApiRequest.RandomCat.Get() + " 🐾");
 
             if(reactionCommands.Contains(input))
                 irc.SendMessage(SendType.Message,e.Data.Channel,input.Substring(1));
@@ -64,6 +65,6 @@ namespace IRCBotApp {
                 irc.SendMessage(SendType.Message,e.Data.Nick,"Bark! You are not my owner.");
             }
         }
-        
+
     }
 }
