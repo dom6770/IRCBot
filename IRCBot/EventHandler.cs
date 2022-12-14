@@ -15,7 +15,7 @@ namespace IRCBotApp {
             string input = e.Data.RawMessage;
 
             if(input.Contains("stockholm.se.quakenet.org") || input.Contains("Q!TheQBot@CServe.quakenet.org"))
-                Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}] {e.Data.RawMessage}");
+                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] {e.Data.RawMessage}");
         }
 
         public static async void OnMessage(object sender,Meebey.SmartIrc4net.IrcEventArgs e) {
@@ -29,7 +29,7 @@ namespace IRCBotApp {
 
             // If any command is send, display it in the console with datetime, channel, nick and message.
             if(allCommands.Contains(input))
-                Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}] {e.Data.Channel} - {e.Data.Nick} | {e.Data.Message}");
+                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] {e.Data.Channel} - {e.Data.Nick} | {e.Data.Message}");
 
             // If the dog command is triggered, return a dog picture from the api
             if(dogCommands.Contains(input))
@@ -54,7 +54,7 @@ namespace IRCBotApp {
 
         public static void OnQueryMessage(object sender,Meebey.SmartIrc4net.IrcEventArgs e) {
             if(e.Data.From == "dom!~dom@069-073.static.dsl.fonira.net") {
-                Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] Query: " + e.Data.Nick + " | " + e.Data.Message);
+                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Query: {e.Data.Nick} | {e.Data.Message}");
                 switch(e.Data.MessageArray[0]) {
                     case "host":
                     irc.SendMessage(SendType.Message,e.Data.Nick,"e.Data.From: " + e.Data.From);
