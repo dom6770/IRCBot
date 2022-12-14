@@ -14,38 +14,29 @@ namespace IRCBotApp {
 
             string input = e.Data.MessageArray[0].ToLower();
 
-            string[] dogCommand = { "!dog", "!dogpic", "!dogpics", "!drecksvieh", "!randomdog", "!random.dog" };
-            string[] catCommand = { "!cat","!catpic","!catpics","!drecksvieh","!randomcat","!random.cat" };
+            string[] dogCommands = { "!dog","!dogpic","!dogpics","!drecksvieh","!randomdog","!random.dog" };
+            string[] catCommands = { "!cat","!catpic","!catpics","!drecksvieh","!randomcat","!random.cat" };
+            string[] reactionCommands = { "awoo","woof","meow" };
 
-            Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
+            string[] allCommands = dogCommands.Concat(catCommands).Concat(reactionCommands).ToArray();
 
-            if(dogCommand.Contains(input))
+            if(allCommands.Contains(input))
+                Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
+
+            if(dogCommands.Contains(input))
                 irc.SendMessage(SendType.Message,e.Data.Channel,await RandomDog.Get() + " 🐾");
 
-            if(catCommand.Contains(input))               
+            if(catCommands.Contains(input))               
                 irc.SendMessage(SendType.Message,e.Data.Channel,RandomCat.Get() + " 🐾");
 
+            if(reactionCommands.Contains("!" + input))
+                irc.SendMessage(SendType.Message,e.Data.Channel,input);
 
-
-            switch(input) {
-                // REACTION COMMANDS
-                case "!awoo":
-                irc.SendMessage(SendType.Message,e.Data.Channel,"Awoo!");
-                break;
-                case "!woof":
-                irc.SendMessage(SendType.Message,e.Data.Channel,"Woof!");
-                break;
-                case "!meow":
-                irc.SendMessage(SendType.Message,e.Data.Channel,"meow!");
-                break;
-                case "!oida":
-                if(e.Data.MessageArray.Length > 1) {
+            if(input.Contains("!oida")) {
+                if(e.Data.MessageArray.Length > 1)
                     irc.SendMessage(SendType.Message,e.Data.Channel,"Oida " + e.Data.MessageArray[1] + "!");
-                    break;
-                } else {
+                else
                     irc.SendMessage(SendType.Message,e.Data.Channel,"Oida!");
-                    break;
-                }
             }
         }
 
