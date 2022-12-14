@@ -1,11 +1,7 @@
 ﻿using Meebey.SmartIrc4net;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace IRCBotApp {
     class IRCBot {
@@ -14,7 +10,7 @@ namespace IRCBotApp {
         public void Run(string[] args) {
             Thread.CurrentThread.Name = "IRCBot";
 
-            // UTF-8 test
+            // UTF-8 enconding
             irc.Encoding = Encoding.UTF8;
             // wait time between messages, we can set this lower on own irc servers
             irc.SendDelay = 500;
@@ -28,7 +24,7 @@ namespace IRCBotApp {
             irc.OnChannelMessage += new IrcEventHandler(EventHandler.OnMessage);
             irc.OnQueryMessage += new IrcEventHandler(EventHandler.OnQueryMessage);
 
-            string[] serverlist = new string[] { "irc.quakenet.org" }; // the server we want to connect to, could be also a simple string
+            string[] serverlist = { "irc.quakenet.org" }; // the server we want to connect to, could be also a simple string
             int port = 6667;
 
             // here we try to connect to the server, if it fails we handle the exception and exit the program
