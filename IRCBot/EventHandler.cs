@@ -30,24 +30,19 @@ namespace IRCBotApp {
             switch(input) {
                 // REACTION COMMANDS
                 case "!awoo":
-                Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
                 irc.SendMessage(SendType.Message,e.Data.Channel,"Awoo!");
                 break;
                 case "!woof":
-                Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
                 irc.SendMessage(SendType.Message,e.Data.Channel,"Woof!");
                 break;
                 case "!meow":
-                Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
                 irc.SendMessage(SendType.Message,e.Data.Channel,"meow!");
                 break;
                 case "!oida":
                 if(e.Data.MessageArray.Length > 1) {
-                    Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
                     irc.SendMessage(SendType.Message,e.Data.Channel,"Oida " + e.Data.MessageArray[1] + "!");
                     break;
                 } else {
-                    Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
                     irc.SendMessage(SendType.Message,e.Data.Channel,"Oida!");
                     break;
                 }
