@@ -19,16 +19,8 @@ namespace IRCBotApp {
         public int fileSizeBytes { get; set; }
         public string url { get; set; }
         public static async Task<string> Get() {
-            string api = "https://random.dog/woof.json";
-
-            Console.WriteLine("Getting api response..");
-            string response = await GetApiResponse(api);
-            Console.WriteLine("API repsone is: " + response);
-
-
+            string response = await GetApiResponse("https://random.dog/woof.json");
             RandomDog picture = System.Text.Json.JsonSerializer.Deserialize<RandomDog>(response);
-            Console.WriteLine("URL is: " + picture.url);
-
             return picture.url;
         }
 
