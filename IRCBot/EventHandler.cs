@@ -19,13 +19,12 @@ namespace IRCBotApp {
 
             Console.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + e.Data.Channel + " - " + e.Data.Nick + " | " + e.Data.Message);
 
-            if(dogCommand.Contains(input)) {
+            if(dogCommand.Contains(input))
                 irc.SendMessage(SendType.Message,e.Data.Channel,await RandomDog.Get() + " 🐾");
-            }
 
-            if(catCommand.Contains(input)) {                
+            if(catCommand.Contains(input))               
                 irc.SendMessage(SendType.Message,e.Data.Channel,RandomCat.Get() + " 🐾");
-            }
+
 
 
             switch(input) {
