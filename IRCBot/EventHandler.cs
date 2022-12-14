@@ -5,20 +5,20 @@ using System.Linq;
 
 namespace IRCBotApp {
     class EventHandler:IRCBot {
-        public static void OnError(object sender,Meebey.SmartIrc4net.ErrorEventArgs e) {
+        public static void OnError(object sender,ErrorEventArgs e) {
             Console.WriteLine($"Error: {e.ErrorMessage}");
             irc.SendMessage(SendType.Message,"dom",e.ErrorMessage);
             Exit();
         }
 
-        public static void OnRawMessage(object sender,Meebey.SmartIrc4net.IrcEventArgs e) {
+        public static void OnRawMessage(object sender,IrcEventArgs e) {
             string input = e.Data.RawMessage;
 
             if(input.Contains("stockholm.se.quakenet.org") || input.Contains("Q!TheQBot@CServe.quakenet.org"))
                 Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] {e.Data.RawMessage}");
         }
 
-        public static async void OnMessage(object sender,Meebey.SmartIrc4net.IrcEventArgs e) {
+        public static async void OnMessage(object sender,IrcEventArgs e) {
 
             string input = e.Data.MessageArray[0].ToLower();
 
@@ -52,7 +52,7 @@ namespace IRCBotApp {
             }
         }
 
-        public static void OnQueryMessage(object sender,Meebey.SmartIrc4net.IrcEventArgs e) {
+        public static void OnQueryMessage(object sender,IrcEventArgs e) {
             if(e.Data.From == "dom!~dom@069-073.static.dsl.fonira.net") {
                 Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Query: {e.Data.Nick} | {e.Data.Message}");
                 switch(e.Data.MessageArray[0]) {
