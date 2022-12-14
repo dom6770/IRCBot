@@ -27,18 +27,23 @@ namespace IRCBotApp {
             string[] reactionCommands = { "!awoo","!woof","!meow" };
             string[] allCommands = dogCommands.Concat(catCommands).Concat(reactionCommands).Append("!oida").ToArray();
 
+            // If any command is send, display it in the console with datetime, channel, nick and message.
             if(allCommands.Contains(input))
                 Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}] {e.Data.Channel} - {e.Data.Nick} | {e.Data.Message}");
 
+            // If the dog command is triggered, return a dog picture from the api
             if(dogCommands.Contains(input))
                 irc.SendMessage(SendType.Message,e.Data.Channel,await ApiRequest.RandomDog.Get() + " 🐾"); ;
 
+            // If the cat command is triggered, return a cat picture from the api
             if(catCommands.Contains(input))
                 irc.SendMessage(SendType.Message,e.Data.Channel,await ApiRequest.RandomCat.Get() + " 🐾");
 
+            // If a reaction is trigerred, turn it as receivied (!woof -> woof)
             if(reactionCommands.Contains(input))
                 irc.SendMessage(SendType.Message,e.Data.Channel,input.Substring(1));
 
+            // oida command. 
             if(input.Contains("!oida")) {
                 if(e.Data.MessageArray.Length > 1)
                     irc.SendMessage(SendType.Message,e.Data.Channel,"oida " + e.Data.MessageArray[1] + "!");
