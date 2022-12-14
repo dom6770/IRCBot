@@ -11,6 +11,10 @@ namespace IRCBotApp {
             Exit();
         }
 
+        public static void OnRawMessage(object sender,IrcEventArgs e) {
+            Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}] {e.Data.RawMessage}");
+        }
+
         public static async void OnMessage(object sender,Meebey.SmartIrc4net.IrcEventArgs e) {
 
             string input = e.Data.MessageArray[0].ToLower();

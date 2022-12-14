@@ -2,6 +2,7 @@
 using System;
 using System.Text;
 using System.Threading;
+using System.Threading.Channels;
 
 namespace IRCBotApp {
     class IRCBot {
@@ -22,6 +23,11 @@ namespace IRCBotApp {
             irc.OnError += new ErrorEventHandler(EventHandler.OnError);
             irc.OnChannelMessage += new IrcEventHandler(EventHandler.OnMessage);
             irc.OnQueryMessage += new IrcEventHandler(EventHandler.OnQueryMessage);
+            irc.OnRawMessage += new IrcEventHandler(EventHandler.OnRawMessage);
+
+
+            string nick = "fluffy";
+            string username = "BaseBot";
 
             string[] serverlist = { "irc.quakenet.org" }; // the server we want to connect to, could be also a simple string
             int port = 6667;
@@ -38,9 +44,10 @@ namespace IRCBotApp {
             // now we are connected to the irc server, let's login, and join channels, and do bot stuff
             try {
                 // here we logon and register our nickname and auth it with Q
-                irc.Login("Otis","A stupid C# Bot by dom",0,"BaseBot");
+                irc.Login(nick,"A stupid C# Bot by dom",0,username);
                 // to auth with Q we need to send a direct message to it. 
                 irc.SendMessage(SendType.Message,"Q@CServe.quakenet.org",$"auth BaseBot {args[0]}");
+
                 // join the channel
                 irc.RfcJoin("#rainbow");
                 irc.RfcJoin("#ComputerBase");
